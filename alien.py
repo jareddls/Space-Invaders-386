@@ -13,15 +13,14 @@ class Alien(Sprite):
     alien_images = [pg.image.load(f'images/alien{n}.png') for n in range(2)]
 
     alien_images0 = [pg.image.load(f'images/alien0{n}.png') for n in range(2)]
-    alien_images1 = [pg.image.load(f'images/alien1{n}.bmp') for n in range(2)]
-    alien_images2 = [pg.image.load(f'images/alien2{n}.bmp') for n in range(2)]
-    alien_images3 = [pg.image.load(f'images/alien3{n}.bmp') for n in range(2)]
+    alien_images1 = [pg.image.load(f'images/alien1{n}.png') for n in range(2)]
+    alien_images2 = [pg.image.load(f'images/alien2{n}.png') for n in range(2)]
+    ufo_image = [pg.image.load(f'images/ufo{n}.png') for n in range(2)]
 
     # alien_types = {0: alien_images0, 1 : alien_images1, 2: alien_images2, 3: alien_images3}    
     alien_timers = {0: Timer(image_list=alien_images0), 
                    1: Timer(image_list=alien_images1), 
-                   2: Timer(image_list=alien_images2), 
-                   3: Timer(image_list=alien_images3)}    
+                   2: Timer(image_list=alien_images2)}    
 
     alien_explosion_images = [pg.image.load(f'images/explode{n}.png') for n in range(5)]
 
@@ -51,7 +50,7 @@ class Alien(Sprite):
         return self.rect.right >= screen_rect.right or self.rect.left <= 0
     def check_bottom_or_ship(self, ship):
         screen_rect = self.screen.get_rect()
-        return self.rect.bottom >= screen_rect.bottom or self.rect.colliderect(ship.rect)
+        return self.rect.bottom >= ship.rect.bottom or self.rect.colliderect(ship.rect)
     def hit(self):
         if not self.dying:
             self.dying = True 

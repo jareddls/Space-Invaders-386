@@ -18,7 +18,7 @@ class Scoreboard:
         self.prep_score()
 
     def increment_score(self): 
-        self.score += self.settings.alien_points
+        self.score += self.settings.alien0_points
         self.prep_score()
 
     def prep_score(self): 
@@ -28,7 +28,7 @@ class Scoreboard:
         # Display the score at the top right of the screen.
         self.score_rect = self.score_image.get_rect()
         self.score_rect.right = self.screen_rect.right - 20
-        self.score_rect.top = 20
+        self.score_rect.top = 50
 
     def reset(self): 
         self.score = 0

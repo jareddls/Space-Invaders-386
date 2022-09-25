@@ -13,6 +13,7 @@ def check_keydown_events(event, settings, ship):
     key = event.key
     if key == pg.K_SPACE: 
         ship.shooting = True
+        ship.image = pg.image.load('images/ship1.png')
     elif key in movement.keys():
         # if key is pg.K_LEFT and not pg.K_RIGHT:
         #     ship.vel = settings.ship_speed_factor * movement[key]
@@ -21,7 +22,11 @@ def check_keydown_events(event, settings, ship):
 
 def check_keyup_events(event, settings, ship):
     key = event.key
-    if key == pg.K_SPACE: ship.shooting = False
+    if key == pg.K_SPACE: 
+        ship.shooting = False
+        ship.image = pg.image.load('images/ship0.png')
+    elif key == pg.K_ESCAPE:
+        ship.vel = Vector()
     elif key in movement.keys(): 
         ship.vel -= settings.ship_speed_factor * movement[key]
     # elif key in movement.keys(): ship.vel = Vector()
@@ -38,5 +43,5 @@ def clamp(posn, rect, settings):
     left, top = posn.x, posn.y
     width, height = rect.width, rect.height
     left = max(0, min(left, settings.screen_width - width))
-    top = 752
+    top = 700
     return Vector(x=left, y=top), pg.Rect(left, top, width, height)

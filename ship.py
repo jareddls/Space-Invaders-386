@@ -13,7 +13,7 @@ class Ship(Sprite):
         self.settings = settings
         self.sound = sound
         self.ships_left = settings.ship_limit  
-        self.image = pg.image.load('images/ship.bmp')
+        self.image = pg.image.load('images/ship0.png')
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
         self.posn = self.center_ship()    # posn is the centerx, bottom of the rect, not left, top
