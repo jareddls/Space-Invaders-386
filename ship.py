@@ -29,13 +29,22 @@ class Ship(Sprite):
         self.vel = Vector()
         self.posn = self.center_ship()
         self.rect.left, self.rect.top = self.posn.x, self.posn.y
-    def die(self):
-# # TODO: reduce the ships_left, 
-# #       reset the game if ships > 0
-# #       game_over if the ships == 0
-        self.ships_left -= 1
-        print(f'Ship is dead! Only {self.ships_left} ships left')
-        self.game.reset() if self.ships_left > 0 else self.game.game_over()
+    def die(self, sb, stats):
+        if self.ships_left > 0:
+            stats.ships_left -= 1
+            self.ships_left -= 1
+            self.game.reset()
+            sb.prep_ships()
+            print(f'Ship is dead! Only {self.ships_left} ships left')
+        else:
+            self.game.game_over()
+            stats.game_active = False
+            pg.mouse.set_visible(True)
+            self.ships_left = 3
+        # print(f'Ship is dead! Only {self.ships_left} ships left')
+        # self.ships_left -= 1
+        # print(f'Ship is dead! Only {self.ships_left} ships left')
+        # self.game.reset() if self.ships_left > 0 else self.game.game_over()
     def update(self):
         self.posn += self.vel
         self.posn, self.rect = clamp(self.posn, self.rect, self.settings)

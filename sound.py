@@ -11,8 +11,8 @@ class Sound:
         gameover_sound = pg.mixer.Sound('sounds/gameover.wav')
         self.sounds = {'laser': laser_sound, 'gameover': gameover_sound}
 
-    def play_bg(self):
-        pg.mixer.music.play(-1, 0.0, 5000)
+    def play_bg(self, loop=-1, start=0, fade_ms=5000):
+        pg.mixer.music.play(loop, start, fade_ms)
 
     def stop_bg(self):
         pg.mixer.music.stop()
@@ -23,5 +23,7 @@ class Sound:
     def gameover(self): 
         self.stop_bg() 
         pg.mixer.music.load('sounds/gameover.wav')
-        self.play_bg()
+        self.play_bg(0,0,0)
         time.sleep(2.8)
+        pg.mixer.music.load('sounds/cbat_normal.wav')
+        self.play_bg()

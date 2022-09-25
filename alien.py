@@ -16,8 +16,7 @@ class Alien(Sprite):
     alien_images1 = [pg.image.load(f'images/alien1{n}.png') for n in range(2)]
     alien_images2 = [pg.image.load(f'images/alien2{n}.png') for n in range(2)]
     ufo_image = [pg.image.load(f'images/ufo{n}.png') for n in range(2)]
-
-    # alien_types = {0: alien_images0, 1 : alien_images1, 2: alien_images2, 3: alien_images3}    
+   
     alien_timers = {0: Timer(image_list=alien_images0), 
                    1: Timer(image_list=alien_images1), 
                    2: Timer(image_list=alien_images2)}    
@@ -36,12 +35,14 @@ class Alien(Sprite):
         
         self.dying = self.dead = False
         
-        self.timer_normal = Timer(image_list=self.alien_images)  
-        # for key, value in self.alien_timers.items():
-        #     self.timer_normal = value   
-        # self.timer_normal = Timer(image_list=self.alien_types[type])
-                      
-        # self.timer_normal = Alien.alien_timers[type]             
+        for key, value in self.alien_timers.items():
+            self.timer_normal = value
+            self.type = value
+        self.timer_normal = self.alien_timers[key]
+        # self.timer_normal = Alien.alien_timers[type]   
+
+        # self.timer_normal = Timer(image_list=self.alien_images)  
+               
         self.timer_explosion = Timer(image_list=Alien.alien_explosion_images, is_loop=False)  
         self.timer = self.timer_normal                                    
 
@@ -71,22 +72,23 @@ class Alien(Sprite):
 
 
 class Aliens:
-    def __init__(self, game, screen, settings, lasers: Lasers, ship): 
+    def __init__(self, game, screen, stats, settings, lasers: Lasers, ship): 
         self.model_alien = Alien(settings=settings, screen=screen, type=1)
         self.game = game
         self.sb = game.scoreboard
         self.aliens = Group()
         self.lasers = lasers.lasers    # a laser Group
         self.screen = screen
+        self.stats = stats
         self.settings = settings
         self.ship = ship
         self.create_fleet()
     def get_number_aliens_x(self, alien_width):
-        available_space_x = self.settings.screen_width - 2 * alien_width
-        number_aliens_x = int(available_space_x / (2* alien_width))
+        available_space_x = self.settings.screen_width - 1 * alien_width
+        number_aliens_x = int(available_space_x / (2 * alien_width))
         return number_aliens_x
     def get_number_rows(self, ship_height, alien_height):
-        available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
+        available_space_y = (self.settings.screen_height - (4 * alien_height) - ship_height)
         number_rows = int(available_space_y / (3.5 * alien_height))
         return number_rows        
     def reset(self):
@@ -107,21 +109,26 @@ class Aliens:
         number_rows = self.get_number_rows(self.ship.rect.height, self.model_alien.rect.height)
         for row_number in range(number_rows):
             for alien_number in range(number_aliens_x):
-                   self.create_alien(alien_number, row_number + 2)
+                self.create_alien(alien_number, row_number + 3)
     def check_fleet_edges(self):
         for alien in self.aliens.sprites(): 
             if alien.check_edges():
                 self.change_fleet_direction()
                 break
-    def check_fleet_bottom(self):
+    def check_fleet_bottom(self, sb, stats):
         for alien in self.aliens.sprites():
             if alien.check_bottom_or_ship(self.ship):
-                self.ship.die()
+                self.ship.die(sb, stats)
                 break
     def check_fleet_empty(self):
         if len(self.aliens.sprites()) == 0:
             print('Aliens all gone!')
             self.game.reset()
+            self.settings.increase_speed()
+
+            self.stats.level += 1
+            self.sb.prep_level()
+
     def change_fleet_direction(self):
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
@@ -135,7 +142,7 @@ class Aliens:
 
     def update(self): 
         self.check_fleet_edges()
-        self.check_fleet_bottom()
+        self.check_fleet_bottom(self.sb, self.stats)
         self.check_collisions()
         self.check_fleet_empty()
         for alien in self.aliens.sprites():
@@ -145,3 +152,9 @@ class Aliens:
     def draw(self): 
         for alien in self.aliens.sprites(): 
             alien.draw() 
+
+
+# #probably for the UFO?
+# class Extra(Sprite):
+#     def __init__(self):
+#         super().__init__()
