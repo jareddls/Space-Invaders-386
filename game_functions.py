@@ -1,5 +1,6 @@
 import sys
 import pickle
+from collections import OrderedDict
 import pygame as pg
 from vector import Vector
 
@@ -32,7 +33,7 @@ def check_keyup_events(event, settings, ship):
         ship.vel -= settings.ship_speed_factor * movement[key]
     # elif key in movement.keys(): ship.vel = Vector()
 
-def check_events(settings, sound, screen, stats, sb, play_button, ship, aliens, lasers):
+def check_events(settings, sound, screen, stats, sb, hs_button, play_button, ship, aliens, lasers):
     for event in pg.event.get():
         if event.type == pg.QUIT: sys.exit()
         elif event.type == pg.KEYDOWN: 
@@ -42,6 +43,7 @@ def check_events(settings, sound, screen, stats, sb, play_button, ship, aliens, 
         elif event.type == pg.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pg.mouse.get_pos()
             check_play_button(settings, sound, screen, stats, sb, play_button, ship, aliens, lasers, mouse_x, mouse_y)
+            check_all_high_score(settings, sound, screen, stats, sb, hs_button, ship, aliens, lasers, mouse_x, mouse_y)
 
 def check_play_button(settings, sound, screen, stats, sb, play_button, ship, aliens, lasers, mouse_x, mouse_y):
     """Start a new game when the player clicks Play."""
@@ -61,11 +63,22 @@ def check_play_button(settings, sound, screen, stats, sb, play_button, ship, ali
         pg.mixer.music.load('sounds/cbat_troll.wav')
         sound.play_bg()
 
+def check_all_high_score(settings, sound, screen, stats, sb, hs_button, ship, aliens, lasers, mouse_x, mouse_y):
+    """Opens the high scores list."""
+    default_hs = dict(JRD=50000,TIF=50000,DRN=50000,SHN=50000,JDT=50000)
+    with open('scores/hs_list.dat', 'wb') as highscores:
+        for name, score in default_hs.items():
+            pickle.dump((name,score), highscores) 
+    button_clicked = hs_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not stats.game_active:
+        sb.list_high_scores()
+        
+
 def check_high_score(stats, sb):
     """Check to see if there's a new high score."""
     if sb.score > stats.high_score:
         stats.high_score = sb.score
-        with open('scores/high_scores.dat', 'wb') as file:
+        with open('scores/high_scores.dat', 'ab') as file:
             pickle.dump(stats.high_score, file)
         sb.prep_high_score()
         

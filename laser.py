@@ -46,7 +46,7 @@ class Lasers:
     def update(self):
         self.lasers.update()
         for laser in self.lasers.copy():
-            if laser.rect.bottom <= 0: self.lasers.remove(laser)
+            if laser.rect.top <= 85: self.lasers.remove(laser)
     def draw(self):
         for laser in self.lasers.sprites(): laser.draw()
 

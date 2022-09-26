@@ -29,7 +29,9 @@ class Game:
         self.lasers = Lasers(settings=self.settings)
         self.ship = Ship(game=self, screen=self.screen, settings=self.settings, sound=self.sound, lasers=self.lasers)
         self.aliens = Aliens(game=self, screen=self.screen, stats=self.stats, settings=self.settings, lasers=self.lasers, ship=self.ship)
-        self.play_button = Button(self.settings, self.screen, "PLAY")
+        self.play_button = Button(self.settings, self.screen, "PLAY", 150, 750, 24)
+        self.hs_button = Button(self.settings, self.screen, "HI-SCORES", 550, 750, 24)
+        self.back_button = Button(self.settings, self.screen, "BACK", 450, 650, 36)
         self.settings.initialize_speed_settings()
        
 
@@ -51,10 +53,10 @@ class Game:
 
     def play(self):
         self.sound.play_bg()
-        play_button = Button(self.settings, self.screen, "PLAY")
+        # play_button = Button(self.settings, self.screen, "PLAY")
 
         while True:     # at the moment, only exits in gf.check_events if Ctrl/Cmd-Q pressed
-            gf.check_events(settings=self.settings, sound=self.sound, ship=self.ship, stats=self.stats, sb=self.scoreboard, play_button=self.play_button,screen=self.screen,aliens=self.aliens,lasers=self.lasers)
+            gf.check_events(settings=self.settings, sound=self.sound, ship=self.ship, stats=self.stats, sb=self.scoreboard, hs_button = self.hs_button, play_button=self.play_button,screen=self.screen,aliens=self.aliens,lasers=self.lasers)
 
             if self.stats.game_active:
                 self.screen.blit(pg.image.load('images/space_bg.png'), (0,0))
@@ -78,7 +80,9 @@ class Game:
                 pg.draw.line(self.screen, (255, 255, 255), (0,735), (800, 735), 3)
             else: 
                 self.screen.blit(self.settings.bg, (0,0))
+                # self.screen.blit()
                 self.play_button.update()
+                self.hs_button.update()
                 self.scoreboard.reset()
 
                 gf.check_high_score(stats=self.stats, sb=self.scoreboard)
@@ -87,6 +91,8 @@ class Game:
                 self.scoreboard.prep_score()
                 self.scoreboard.prep_ships()
                 self.scoreboard.prep_level()
+                self.scoreboard.prep_pt_table()
+                self.scoreboard.update_pt_table()
                 self.stats.reset_stats()
                 
 

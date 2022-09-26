@@ -4,7 +4,7 @@ from game_stats import GameStats
 
 class Button():
 
-    def __init__(self, settings, screen, msg):
+    def __init__(self, settings, screen, msg, x, y, font_size):
         """Initialize button attributes."""
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -13,11 +13,11 @@ class Button():
         self.width, self.height = 200, 50
         self.button_color = (255, 255, 255)
         self.text_color = (0, 0, 0)
-        self.font = pygame.font.Font('font/pixel.ttf', 36)
+        self.font = pygame.font.Font('font/pixel.ttf', font_size)
         
         # Build the button's rect object, and center it.
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.center = (350,600)
+        self.rect.center = (x,y)
         
         # The button message only needs to be prepped once.
         self.prep_msg(msg)
