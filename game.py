@@ -17,7 +17,7 @@ import sys
 class Game:
     def __init__(self):
         pg.init()
-
+        pg.display.set_icon(pg.image.load(f'images/ufo0.png'))
         self.settings = Settings()
         size = self.settings.screen_width, self.settings.screen_height   # tuple
         self.screen = pg.display.set_mode(size=size)
