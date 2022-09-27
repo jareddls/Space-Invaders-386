@@ -11,11 +11,7 @@ class Settings():
         self.screen_height = 800
         self.bg = pg.image.load('images/start_screen.png')
         self.bg_color = (0, 0, 0)
-        
-# # TODO: test laser with a really wide laser
-        # self.laser_width = 500
-        # self.laser_height = 30
-        # self.laser_color = 255, 0, 0
+
         self.lasers_every = 150
 
         self.alien0_points = 50
@@ -27,8 +23,7 @@ class Settings():
 
         self.speedup_scale = 1.5
 
-# # TODO: set a ship_limit of 3
-        self.ship_limit = 3         # total ships allowed in game before game over
+        self.ship_limit = 3      # total ships allowed in game before game over
 
         self.fleet_drop_speed = 15
         self.fleet_direction = 1     # change to a Vector(1, 0) move to the right, and ...
@@ -42,6 +37,8 @@ class Settings():
     def increase_speed(self):
         self.increment += 1
         scale = self.speedup_scale
+        if self.lasers_every > 50:
+            self.lasers_every -= 5 #how much lasers show up every level goes faster 
         # self.ship_speed_factor *= scale
         self.alien_speed_factor *= scale
         # self.laser_speed_factor *= scale

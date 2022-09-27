@@ -12,7 +12,6 @@ class GameStats():
         self.game_active = False
         
         # High score should never be reset.
-        # self.high_score = 0
         try:
             with open('scores/high_scores.dat', 'rb') as file:
                 self.high_score = pickle.load(file)
@@ -21,6 +20,6 @@ class GameStats():
 
     def reset_stats(self):
         """Initialize statistics that can change during the game."""
-        self.ships_left = self.settings.ship_limit
+        self.ships_left = self.settings.ship_limit - 1
         self.score = 0
         self.level = 1

@@ -14,11 +14,9 @@ class Laser(Sprite):
         self.screen = screen
         self.image = pg.image.load('images/laser0.png')
         self.rect = self.image.get_rect()
-        # self.rect = pg.Rect(0, 0, settings.laser_width, settings.laser_height)
         self.rect.centerx = ship.rect.centerx
         self.rect.bottom = ship.rect.top
         self.y = float(self.rect.y)
-        # self.color = (randint(0, 200), randint(0, 200), randint(0, 200))
         self.speed_factor = settings.laser_speed_factor
 
         self.timer_normal = Timer(image_list=self.laser_images)
@@ -33,7 +31,6 @@ class Laser(Sprite):
         rect = image.get_rect()
         rect.left, rect.top = self.rect.left, self.rect.top
         self.screen.blit(image, rect)
-        # pg.draw.rect(self.screen, self.color, self.rect)
 
 class Lasers:
     def __init__(self, settings):

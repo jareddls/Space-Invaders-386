@@ -2,7 +2,6 @@ import pygame as pg
 from pygame.sprite import Group
 from ship import Ship
 import game_functions as gf
-# import pygame.font
 
 class Scoreboard:
     def __init__(self, game, stats, sound): 
@@ -28,10 +27,8 @@ class Scoreboard:
         self.prep_ships()
 
     def increment_score(self, type): 
-        # self.score += self.settings.alien0_points
         self.score += type
         self.prep_score()
-        # gf.check_high_score(stats, sb)
 
     def prep_score(self): 
         score_str = str(self.score)
@@ -63,22 +60,6 @@ class Scoreboard:
         self.hs_title_rect = self.hs_title.get_rect()
         self.hs_title_rect.left = self.screen_rect.left + 20
         self.hs_title_rect.top = 15
-
-    # def list_high_scores(self):
-    #     self.screen.blit(pg.image.load(f'images/space_bg.png'), (0,0))
-        
-    #     with open('scores/hs_list.dat', 'rb') as highscores:
-    #         list_hs1 = pickle.load(highscores)
-    #         list_hs2 = pickle.load(highscores)
-    #         list_hs3 = pickle.load(highscores)
-    #         list_hs4 = pickle.load(highscores)
-    #         list_hs5 = pickle.load(highscores)
-    #         print(list_hs1)
-    #     self.list_hs_image = self.font.render(str(f'{list_hs1[0]} : {list_hs1[1]}'), True,
-    #         self.text_color, self.settings.bg_color)
-    #     self.list_hs_rect = self.list_hs_image.get_rect()
-    #     self.list_hs_rect.center = self.screen_rect.center
-
 
     def prep_level(self):
         """Turn the level into a rendered image."""
@@ -156,11 +137,6 @@ class Scoreboard:
     def draw_ships(self):
         self.ships.draw(self.screen)
 
-    # def update_list_hs(self):
-    #     self.draw_list_hs()
-
-    # def draw_list_hs(self):
-    #     self.screen.blit(self.list_hs_image, self.list_hs_rect)
 
     def draw_pt_table(self):
         self.screen.blit(pg.image.load('images/alien0.png'), (195, 645))
