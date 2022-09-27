@@ -20,6 +20,9 @@ class Timer:
   def is_expired(self):
     return not self.is_loop and self.index >= len(self.image_list) - 1
 
+  def is_reuse(self):
+    self.index = 0
+    
   def image(self): 
     self.next_frame()
     return self.image_list[self.index]

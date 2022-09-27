@@ -9,12 +9,13 @@ from sys import exit
 
 class Ship(Sprite):
     ship_explosion_images = [pg.image.load(f'images/ship_explosion{n}.png') for n in range(12)]
-    ship_reg_image = [pg.image.load(f'images/ship{n}.png') for n in range(1)]
+    ship_reg_image = [pg.image.load(f'images/ship{n}.png') for n in range(4)]
 
-    def __init__(self, game, settings, screen, sound, lasers=None):
+    def __init__(self, game, settings, stats, screen, sound, lasers=None):
         super().__init__()
         self.game = game
         self.screen = screen
+        self.stats = stats
         self.settings = settings
         self.sound = sound
         self.ships_left = settings.ship_limit  
@@ -31,6 +32,7 @@ class Ship(Sprite):
 
         self.timer_normal = Timer(image_list=self.ship_reg_image,is_loop=True)
         self.timer_explosion = Timer(image_list=self.ship_explosion_images, is_loop=False)
+        
         self.timer = self.timer_normal
 
     def center_ship(self):
@@ -39,25 +41,28 @@ class Ship(Sprite):
         return Vector(self.rect.left, self.rect.top)
     def reset(self): 
         self.vel = Vector()
-        self.posn = self.center_ship()
-        self.rect.left, self.rect.top = self.posn.x, self.posn.y
+        # self.posn = self.center_ship()
+        # self.rect.left, self.rect.top = self.posn.x, self.posn.y
     def die(self, sb, stats):
         if self.ships_left > 0:
             stats.ships_left -= 1
             self.ships_left -= 1
-
             if not self.dying:
                 self.dying = True
+                self.timer_explosion.is_reuse()
                 self.timer = self.timer_explosion 
                 self.settings.alien_speed_factor=0
             self.game.reset()
             sb.prep_ships()
             print(f'Ship is dead! Only {self.ships_left} ships left')
         else:
+            # self.timer_explosion.is_reuse()
+            # self.timer = self.timer_explosion 
             self.game.game_over()
             stats.game_active = False
             pg.mouse.set_visible(True)
             self.ships_left = 3
+            
           
         
         
@@ -67,18 +72,26 @@ class Ship(Sprite):
         # self.game.reset() if self.ships_left > 0 else self.game.game_over()
     def update(self):
         if self.timer == self.timer_explosion and self.timer.is_expired():
-            # self.kill()
-            self.dying=False
+            self.kill()
+            # time.sleep(2)
+            self.dying = False
             self.timer = self.timer_normal
-            self.settings.alien_speed_factor=1
-        self.posn += self.vel
-        self.posn, self.rect = clamp(self.posn, self.rect, self.settings)
-        if self.shooting:
-            self.lasers_attempted += 1
-            if self.lasers_attempted % self.settings.lasers_every == 0:
-                self.lasers.shoot(settings=self.settings, screen=self.screen,
-                                ship=self, sound=self.sound)
-        self.draw()
+            self.settings.alien_speed_factor = self.settings.increment * 0.09
+            self.posn = self.center_ship()
+            self.rect.left, self.rect.top = self.posn.x, self.posn.y
+        else:
+            if self.timer == self.timer_explosion and not self.timer.is_expired():
+                self.vel = Vector()
+            else:
+                self.posn += self.vel
+                self.posn, self.rect = clamp(self.posn, self.rect, self.settings)
+                if self.shooting:
+                    self.lasers_attempted += 1
+                    if self.lasers_attempted % self.settings.lasers_every == 0:
+                        self.lasers.shoot(settings=self.settings, screen=self.screen,
+                                        ship=self, sound=self.sound)
+            self.draw()
+        
     def draw(self): 
         # pass
         # self.image = self.timer.image()

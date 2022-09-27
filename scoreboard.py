@@ -1,5 +1,4 @@
 import pygame as pg 
-import pickle
 from pygame.sprite import Group
 from ship import Ship
 import game_functions as gf
@@ -65,20 +64,20 @@ class Scoreboard:
         self.hs_title_rect.left = self.screen_rect.left + 20
         self.hs_title_rect.top = 15
 
-    def list_high_scores(self):
-        self.screen.blit(pg.image.load(f'images/space_bg.png'), (0,0))
+    # def list_high_scores(self):
+    #     self.screen.blit(pg.image.load(f'images/space_bg.png'), (0,0))
         
-        with open('scores/hs_list.dat', 'rb') as highscores:
-            list_hs1 = pickle.load(highscores)
-            list_hs2 = pickle.load(highscores)
-            list_hs3 = pickle.load(highscores)
-            list_hs4 = pickle.load(highscores)
-            list_hs5 = pickle.load(highscores)
-            print(list_hs1)
-        self.list_hs_image = self.font.render(str(f'{list_hs1[0]} : {list_hs1[1]}'), True,
-            self.text_color, self.settings.bg_color)
-        self.list_hs_rect = self.list_hs_image.get_rect()
-        self.list_hs_rect.center = self.screen_rect.center
+    #     with open('scores/hs_list.dat', 'rb') as highscores:
+    #         list_hs1 = pickle.load(highscores)
+    #         list_hs2 = pickle.load(highscores)
+    #         list_hs3 = pickle.load(highscores)
+    #         list_hs4 = pickle.load(highscores)
+    #         list_hs5 = pickle.load(highscores)
+    #         print(list_hs1)
+    #     self.list_hs_image = self.font.render(str(f'{list_hs1[0]} : {list_hs1[1]}'), True,
+    #         self.text_color, self.settings.bg_color)
+    #     self.list_hs_rect = self.list_hs_image.get_rect()
+    #     self.list_hs_rect.center = self.screen_rect.center
 
 
     def prep_level(self):
@@ -94,7 +93,7 @@ class Scoreboard:
         """Show how many ships are left."""
         self.ships = Group()
         for ship_number in range(self.stats.ships_left):
-            ship = Ship(game=self.game, settings=self.settings, screen=self.screen,sound=self.sound)
+            ship = Ship(game=self.game, settings=self.settings, stats=self.stats, screen=self.screen,sound=self.sound)
             ship.rect.x = 10 + ship_number * (ship.rect.width * 1.5)
             ship.rect.y = 750
             self.ships.add(ship)
@@ -140,6 +139,9 @@ class Scoreboard:
     def update_ships(self):
         self.draw_ships() 
 
+    def update_pt_table(self):
+        self.draw_pt_table()
+
     def draw_score(self): 
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.score_title, self.score_title_rect)
@@ -154,14 +156,11 @@ class Scoreboard:
     def draw_ships(self):
         self.ships.draw(self.screen)
 
-    def update_list_hs(self):
-        self.draw_list_hs()
+    # def update_list_hs(self):
+    #     self.draw_list_hs()
 
-    def draw_list_hs(self):
-        self.screen.blit(self.list_hs_image, self.list_hs_rect)
-
-    def update_pt_table(self):
-        self.draw_pt_table()
+    # def draw_list_hs(self):
+    #     self.screen.blit(self.list_hs_image, self.list_hs_rect)
 
     def draw_pt_table(self):
         self.screen.blit(pg.image.load('images/alien0.png'), (195, 645))

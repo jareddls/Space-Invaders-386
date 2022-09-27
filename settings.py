@@ -3,7 +3,7 @@ import pygame as pg
 
 class Settings():
     """A class to store all settings for Alien Invasion."""
-
+    increment = 1
     def __init__(self):
         """Initialize the game's settings."""
         # Screen settings
@@ -25,7 +25,7 @@ class Settings():
         mystery_points = {'alien0': 50, 'alien1': 100, 'alien2': 150, 'ufo_max': 200}
         self.ufo_points = random.choice(list(mystery_points.keys()))
 
-        self.speedup_scale = 1.1
+        self.speedup_scale = 1.5
 
 # # TODO: set a ship_limit of 3
         self.ship_limit = 3         # total ships allowed in game before game over
@@ -35,11 +35,12 @@ class Settings():
         self.initialize_speed_settings()
 
     def initialize_speed_settings(self):
-        self.alien_speed_factor = 2
+        self.alien_speed_factor = 0.09
         self.ship_speed_factor = 1
         self.laser_speed_factor = 1
 
     def increase_speed(self):
+        self.increment += 1
         scale = self.speedup_scale
         # self.ship_speed_factor *= scale
         self.alien_speed_factor *= scale
