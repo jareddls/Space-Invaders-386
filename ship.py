@@ -5,6 +5,8 @@ from pygame.sprite import Sprite
 from game_functions import clamp
 from vector import Vector
 from sys import exit
+import shutil
+import os
 
 
 class Ship(Sprite):
@@ -42,6 +44,29 @@ class Ship(Sprite):
     def reset(self): 
         self.vel = Vector()
     def die(self, sb, stats):
+        pg.mixer.music.stop()
+
+        for filename in os.listdir('sounds'):
+                file_path= os.path.join('sounds', filename)
+                try:
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                except Exception as e:
+                    print('Failed to delete %s. Reason: %s' % (file_path, e))
+            
+        source = 'sounds/bg_song/bg_song0.wav'
+        dst = 'sounds/bg_song0.wav'
+
+        shutil.copy(source, dst)
+        pg.mixer.music.load('sounds/bg_song0.wav')
+        
+        self.sound.play_bg()
+
+        pg.mixer.music.load('sounds/bg_song/bg_song0.wav')
+        self.sound.play_bg()
+
+
+
         self.sound.ship_death()  
         stats.ships_left -= 1
         self.ships_left -= 1

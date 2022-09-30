@@ -38,7 +38,7 @@ class Settings():
         self.increment += 1
         scale = self.speedup_scale
         if self.lasers_every > 50:
-            self.lasers_every -= 5 #how much lasers show up every level goes faster 
+            self.lasers_every -= 20 #how much lasers show up every level goes faster 
         # self.ship_speed_factor *= scale
         self.alien_speed_factor *= scale
         # self.laser_speed_factor *= scale

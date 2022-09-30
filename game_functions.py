@@ -1,6 +1,5 @@
 import sys
 import pickle
-from collections import OrderedDict
 import pygame as pg
 from vector import Vector
 
@@ -53,7 +52,7 @@ def check_play_button(settings, sound, screen, stats, sb, play_button, ship, ali
         sb.reset()
 
         ship.center_ship()
-        pg.mixer.music.load('sounds/bg_song.wav')
+        pg.mixer.music.load('sounds/bg_song/bg_song0.wav')
         sound.play_bg()
         
 

@@ -5,6 +5,10 @@ from laser import Lasers
 from timer import Timer
 from sound import Sound
 
+import wave
+import os
+import shutil
+
 
 class Alien(Sprite):
     alien_images0 = [pg.image.load(f'images/alien0{n}.png') for n in range(2)]
@@ -55,6 +59,7 @@ class Alien(Sprite):
         if not self.dying:
             self.dying = True 
             self.timer = self.timer_explosion
+
             self.sound.alien_death()
     def update(self): 
         if self.timer == self.timer_explosion and self.timer.is_expired():
@@ -71,6 +76,7 @@ class Alien(Sprite):
 
 
 class Aliens:
+    increment = 0
     def __init__(self, game, screen, stats, sound, settings, lasers: Lasers, ship): 
         self.model_alien = Alien(settings=settings,sound=sound, screen=screen, type=type)
         self.game = game
@@ -122,10 +128,30 @@ class Aliens:
         for alien in self.aliens.sprites():
             if alien.check_bottom_or_ship(self.ship):
                 self.ship.die(sb, stats)
+                self.increment = 0
                 break
     def check_fleet_empty(self):
         if len(self.aliens.sprites()) == 0:
             print('Aliens all gone!')
+            self.increment = 0
+
+            pg.mixer.music.stop()
+            for filename in os.listdir('sounds'):
+                file_path= os.path.join('sounds', filename)
+                try:
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                except Exception as e:
+                    print('Failed to delete %s. Reason: %s' % (file_path, e))
+            
+            source = 'sounds/bg_song/bg_song0.wav'
+            dst = 'sounds/bg_song0.wav'
+
+            shutil.copy(source, dst)
+            pg.mixer.music.load('sounds/bg_song0.wav')
+            
+            self.sound.play_bg()
+
             self.game.reset()
             self.settings.increase_speed()
 
@@ -141,6 +167,31 @@ class Aliens:
         if collisions:
             for alien in collisions:
                 alien.hit()
+
+                CHANNELS = 1
+                swidth = 2
+                Change_RATE = 1.05
+
+                spf = wave.open(f'sounds/bg_song{int(self.increment/10)}.wav', 'rb')
+                RATE = spf.getframerate()
+                signal = spf.readframes(-1)
+                self.increment += 1
+
+                if self.increment % 10 == 0:
+                    
+
+                    wf = wave.open(f'sounds/bg_song{int(self.increment/10)}.wav', 'wb')
+                    wf.setnchannels(CHANNELS)
+                    wf.setsampwidth(swidth)
+                    wf.setframerate(RATE * Change_RATE)
+                    wf.writeframes(signal)
+                    wf.close()
+
+                    pg.mixer.music.stop()
+                    pg.mixer.music.load(f'sounds/bg_song{int(self.increment/10)}.wav')
+                    self.sound.play_bg(fade_ms=0)
+
+                    
             self.sb.increment_score(alien.value)
 
     def update(self): 

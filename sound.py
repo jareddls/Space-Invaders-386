@@ -7,10 +7,10 @@ class Sound:
         pg.mixer.init()
         pg.mixer.music.load(bg_music)
         pg.mixer.music.set_volume(0.2)
-        laser_sound = pg.mixer.Sound('sounds/laser.wav')
-        alien_death_sound = pg.mixer.Sound('sounds/alien_death.wav')
-        ship_death_sound = pg.mixer.Sound('sounds/ship_death.wav')
-        gameover_sound = pg.mixer.Sound('sounds/gameover.wav')
+        laser_sound = pg.mixer.Sound('sounds/important/laser.wav')
+        alien_death_sound = pg.mixer.Sound('sounds/important/alien_death.wav')
+        ship_death_sound = pg.mixer.Sound('sounds/important/ship_death.wav')
+        gameover_sound = pg.mixer.Sound('sounds/important/gameover.wav')
         self.sounds = {'laser': laser_sound, 'gameover': gameover_sound, 'alien_death':alien_death_sound, 'ship_death':ship_death_sound}
 
     def play_bg(self, loop=-1, start=0, fade_ms=3000):
@@ -29,8 +29,8 @@ class Sound:
         pg.mixer.Sound.set_volume(self.sounds['laser'], 0.1)
     def gameover(self): 
         self.stop_bg() 
-        pg.mixer.music.load('sounds/gameover.wav')
+        pg.mixer.music.load('sounds/important/gameover.wav')
         self.play_bg(0,0,0)
         time.sleep(2.5)
-        pg.mixer.music.load('sounds/start_song.wav')
+        pg.mixer.music.load('sounds/important/start_song.wav')
         self.play_bg()

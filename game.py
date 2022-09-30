@@ -1,4 +1,3 @@
-import wave
 import pygame as pg
 from timer import Timer
 from settings import Settings
@@ -11,7 +10,6 @@ from sound import Sound
 from scoreboard import Scoreboard
 from game_stats import GameStats
 from button import Button
-import sys
 
 
 class Game:
@@ -23,7 +21,7 @@ class Game:
         self.screen = pg.display.set_mode(size=size)
         pg.display.set_caption("Space Invaders")
 
-        self.sound = Sound(bg_music="sounds/start_song.wav")
+        self.sound = Sound(bg_music="sounds/important/start_song.wav")
 
         self.stats = GameStats(settings=self.settings)
         self.scoreboard = Scoreboard(game=self, stats=self.stats, sound=self.sound)  
@@ -44,7 +42,9 @@ class Game:
     def game_over(self):
         print('All ships gone: game over!')
         self.sound.gameover()
+        pg.mouse.set_visible(True)
         self.stats.game_active = False
+        
 
     def play(self):
         self.sound.play_bg()
