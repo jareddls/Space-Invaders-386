@@ -99,8 +99,8 @@ class Ship(Sprite):
                 if self.shooting:
                     self.lasers_attempted += 1
                     if self.lasers_attempted % self.settings.lasers_every == 0:
-                        self.lasers.shoot(settings=self.settings, screen=self.screen,
-                                        ship=self, sound=self.sound)
+                        self.lasers.shoot(game=self.game, x=self.rect.centerx,
+                                        y=self.rect.top)
             self.draw()
         
     def draw(self): 

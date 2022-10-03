@@ -26,7 +26,7 @@ def check_keyup_events(event, settings, ship):
     elif key in movement.keys(): 
         ship.vel -= settings.ship_speed_factor * movement[key]
 
-def check_events(settings, sound, screen, stats, sb, play_button, ship, aliens, lasers):
+def check_events(settings, sound, screen, stats, sb, play_button, ship, aliens, ship_lasers, alien_lasers):
     for event in pg.event.get():
         if event.type == pg.QUIT: sys.exit()
         elif event.type == pg.KEYDOWN: 
@@ -35,9 +35,9 @@ def check_events(settings, sound, screen, stats, sb, play_button, ship, aliens, 
             check_keyup_events(event=event, settings = settings, ship=ship)
         elif event.type == pg.MOUSEBUTTONUP:
             mouse_x, mouse_y = pg.mouse.get_pos()
-            check_play_button(settings, sound, screen, stats, sb, play_button, ship, aliens, lasers, mouse_x, mouse_y)
+            check_play_button(settings, sound, screen, stats, sb, play_button, ship, aliens, ship_lasers, alien_lasers, mouse_x, mouse_y)
 
-def check_play_button(settings, sound, screen, stats, sb, play_button, ship, aliens, lasers, mouse_x, mouse_y):
+def check_play_button(settings, sound, screen, stats, sb, play_button, ship, aliens, ship_lasers, alien_lasers, mouse_x, mouse_y):
     """Start a new game when the player clicks Play."""
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
@@ -46,7 +46,8 @@ def check_play_button(settings, sound, screen, stats, sb, play_button, ship, ali
         stats.game_active = True
 
         aliens.reset()
-        lasers.reset()
+        ship_lasers.reset()
+        alien_lasers.reset()
         
         sb.prep_score()
         sb.reset()

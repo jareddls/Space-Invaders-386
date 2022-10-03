@@ -14,6 +14,8 @@ class Settings():
 
         self.lasers_every = 150
 
+        self.aliens_shoot_every = 600
+
         self.alien0_points = 50
         self.alien1_points = 100
         self.alien2_points = 150

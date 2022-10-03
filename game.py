@@ -4,12 +4,14 @@ from settings import Settings
 import game_functions as gf
 
 from laser import Lasers
+from laser import LaserType
 from alien import Aliens
 from ship import Ship
 from sound import Sound
 from scoreboard import Scoreboard
 from game_stats import GameStats
 from button import Button
+from barriers import Barriers
 
 
 class Game:
@@ -22,12 +24,17 @@ class Game:
         pg.display.set_caption("Space Invaders")
 
         self.sound = Sound(bg_music="sounds/important/start_song.wav")
+        
+        self.ship_lasers = Lasers(settings=self.settings, type=LaserType.SHIP)
+        self.alien_lasers = Lasers(settings=self.settings, type=LaserType.ALIEN)
+
+        self.barriers = Barriers(game = self)
 
         self.stats = GameStats(settings=self.settings)
         self.scoreboard = Scoreboard(game=self, stats=self.stats, sound=self.sound)  
-        self.lasers = Lasers(settings=self.settings)
-        self.ship = Ship(game=self, screen=self.screen, settings=self.settings, stats=self.stats, sound=self.sound, lasers=self.lasers)
-        self.aliens = Aliens(game=self, screen=self.screen, stats=self.stats, sound=self.sound, settings=self.settings, lasers=self.lasers, ship=self.ship)
+        # self.lasers = Lasers(settings=self.settings)
+        self.ship = Ship(game=self, screen=self.screen, settings=self.settings, stats=self.stats, sound=self.sound, lasers=self.ship_lasers)
+        self.aliens = Aliens(game=self, screen=self.screen, stats=self.stats, sound=self.sound, settings=self.settings, lasers=self.alien_lasers, ship=self.ship)
         self.play_button = Button(self.settings, self.screen, "PLAY", 350, 750, 24)
 
         self.settings.initialize_speed_settings()
@@ -35,9 +42,11 @@ class Game:
 
     def reset(self):
         print('Resetting game...')
-        self.lasers.reset()
+        self.ship_lasers.reset()
+        self.alien_lasers.reset()
         self.ship.reset()
         self.aliens.reset()
+        self.barriers.reset()
 
     def game_over(self):
         print('All ships gone: game over!')
@@ -50,14 +59,16 @@ class Game:
         self.sound.play_bg()
 
         while True: 
-            gf.check_events(settings=self.settings, sound=self.sound, ship=self.ship, stats=self.stats, sb=self.scoreboard, play_button=self.play_button,screen=self.screen,aliens=self.aliens,lasers=self.lasers)
+            gf.check_events(settings=self.settings, sound=self.sound, ship=self.ship, stats=self.stats, sb=self.scoreboard, play_button=self.play_button,screen=self.screen,aliens=self.aliens,ship_lasers=self.ship_lasers, alien_lasers=self.alien_lasers)
 
             if self.stats.game_active:
                 self.screen.blit(pg.image.load('images/space_bg.png'), (0,0))
 
                 self.ship.update()
                 self.aliens.update()
-                self.lasers.update()
+                self.ship_lasers.update()
+                self.alien_lasers.update()
+                self.barriers.update()
 
                 self.scoreboard.update_score()
                 
@@ -68,7 +79,7 @@ class Game:
                 self.scoreboard.update_hs()
                 
                 gf.check_high_score(stats=self.stats, sb=self.scoreboard)
-                self.scoreboard.prep_high_score()
+                self.scoreboard.prep_high_score()                                                                    
 
                 pg.draw.line(self.screen, (255, 255, 255), (0, 85), (800, 85), 3)
                 pg.draw.line(self.screen, (255, 255, 255), (0,735), (800, 735), 3)
