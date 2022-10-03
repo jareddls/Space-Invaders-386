@@ -1,3 +1,8 @@
+### AUTHORS:
+### Jared De Los Santos
+### Tiffany Tran
+
+
 import pygame as pg
 from timer import Timer
 from settings import Settings
