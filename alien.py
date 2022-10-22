@@ -42,8 +42,8 @@ class Alien(Sprite):
             self.value = self.settings.alien1_points
         elif self.type is self.alien_timers['purple']:
             self.value = self.settings.alien2_points
-        elif self.type is self.alien_timers['ufo']:
-            self.value = self.settings.ufo_points
+        # elif self.type is self.alien_timers['ufo']:
+        #     self.value = self.settings.ufo_points
         
         self.dying = self.dead = False
 
@@ -51,7 +51,7 @@ class Alien(Sprite):
        
                
         self.timer_explosion = Timer(image_list=Alien.alien_explosion_images, is_loop=False)  
-        self.ufo_timer_explosion = Timer(image_list=Alien.ufo_explode_images, is_loop=False)
+        # self.ufo_timer_explosion = Timer(image_list=Alien.ufo_explode_images, is_loop=False)
         self.timer = self.timer_normal                                    
 
     def check_edges(self): 
@@ -245,8 +245,10 @@ class Aliens:
         collisions = pg.sprite.groupcollide(self.ufo, self.ship_lasers, False, True)
         if collisions:
             for ufo in collisions:
-                ufo.hit()
-            self.sb.increment_score(randint(100, 200))
+                mystery_points = choice([50,100,150,200])
+                ufo.hit(mystery_points)
+                print(mystery_points)
+                self.sb.increment_score(mystery_points)
             
 
     def update(self): 
@@ -276,50 +278,72 @@ class Aliens:
             self.sound.ufo()
             self.ufo_spawn_time = randint(1000, 1600)
 
-
-# #probably for the UFO?
-# class Extra(Sprite):
-#     def __init__(self):
-#         super().__init__(
-# 
-
-class UFO(pg.sprite.Sprite):
+class UFO(Sprite):
     # UFO image list
+    ship_explosion_images = [pg.image.load(f'images/ship_explosion{n}.png') for n in range(13)]
     ufo_images = [pg.image.load(f'images/ufo{n}.png') for n in range(5)]
 
-    # UFO explosion image list
-    ufo_explosion_images = [pg.transform.rotozoom(pg.image.load(f'images/ufo_explosion{n}.png'), 0, 1.0) for n in
-                            range(2)]
+    fifty = [pg.image.load(f'images/fifty{n}.png') for n in range(2)]
+    hundred = [pg.image.load(f'images/hundred{n}.png') for n in range(2)]
+    hundredfifty = [pg.image.load(f'images/hundredfifty{n}.png') for n in range(2)]
+    twohundred = [pg.image.load(f'images/twohundred{n}.png') for n in range(2)]
+
+    
 
     def __init__(self, side, game):
         super().__init__()
+        self.game = game
         self.settings = game.settings
         self.screen = game.screen
-        self.timer_normal = Timer(image_list=UFO.ufo_images)
-        self.timer_explosion = Timer(image_list=UFO.ufo_explosion_images, delay=200, is_loop=False)
+
+        self.timer_normal = Timer(image_list=self.ufo_images)
         self.timer = self.timer_normal
+
         self.dying = self.dead = False
-        self.image = pg.image.load('images/ufo0.png').convert_alpha()
+        self.image = pg.image.load('images/ufo0.png')
+
+        self.fifty_timer = Timer(image_list=self.fifty, delay=1500, is_loop=False)
+        self.hundred_timer = Timer(image_list=self.hundred, delay=1500, is_loop=False)
+        self.hundredfifty_timer = Timer(image_list=self.hundredfifty, delay=1500, is_loop=False)
+        self.twohundred_timer = Timer(image_list=self.twohundred, delay=1500, is_loop=False)
+
         if side == 'right':
             x = self.settings.screen_width + 50
-            self.speed = -3
+            self.speed = -1
         else:
             x = -50
-            self.speed = 3
+            self.speed = 1
 
         self.rect = self.image.get_rect(topleft=(x, 110))
 
     def update(self):
         self.rect.x += self.speed
 
-        if self.timer == self.timer_explosion and self.timer.is_expired():
+        if (self.timer == self.fifty_timer 
+            or self.timer == self.hundred_timer
+            or self.timer == self.hundredfifty_timer
+            or self.timer == self.twohundred_timer) and self.timer.is_expired():
             self.kill()
+
         self.draw()
 
-    def hit(self):
+    def hit(self, points):
         if not self.dying:
             self.dying = True
-            self.timer = self.timer_explosion
+            self.points = points
+            print(self.points)
+            if self.points == 50:
+                self.timer = self.fifty_timer
+
+            elif self.points == 100:
+                self.timer = self.hundred_timer
+
+            elif self.points == 150:
+                self.timer = self.hundredfifty_timer
+
+            elif self.points == 200:
+                self.timer = self.twohundred_timer
+
 
     def draw(self):
         image = self.timer.image()

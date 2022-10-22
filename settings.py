@@ -20,8 +20,9 @@ class Settings():
         self.alien1_points = 100
         self.alien2_points = 150
 
-        mystery_points = {'alien0': 50, 'alien1': 100, 'alien2': 150, 'ufo_max': 200}
-        self.ufo_points = random.choice(list(mystery_points.keys()))
+        # mystery_points = {'50': 50, '100': 100, '150': 150, '200': 200}
+        mystery_points = [50, 100, 150, 200]
+        self.ufo_points = random.choice(mystery_points)
 
         self.speedup_scale = 1.5
 
